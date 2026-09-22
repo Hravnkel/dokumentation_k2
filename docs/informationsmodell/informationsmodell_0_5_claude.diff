@@ -1,0 +1,321 @@
+--- orig.md	2026-09-22 14:18:44.178333842 +0000
++++ /mnt/user-data/outputs/informationsmodell_0_5.md	2026-09-22 14:18:44.222333844 +0000
+@@ -8,15 +8,15 @@
+ 
+ ## 1. Introduktion
+ 
+-### 2. Grundläggande principer
++## 2. Grundläggande principer
+ 
+ #### K-samsök bygger på Linked Art
+ 
+-Linked Art är en vidareutveckling / tillämpning av den sektorsövergripande strukturen CIDOC-CRM. K-samsök har valt att tillämpa Linked Art som grundmodell för att underlätta internationell interoperabilitet. 
++Linked Art är en tillämpningsprofil (application profile) av den sektorsövergripande ontologin CIDOC CRM. K-samsök har valt att tillämpa Linked Art som grundmodell för att underlätta internationell interoperabilitet. 
+ 
+ #### Objekt identifieras med URI:er
+ 
+-Varje objekt i K-samsök har en beständig URI som unik identifierare. Objektet ska alltid vara nåbart via internet. 
++Varje persistent objekt i K-samsök (se [Identitet](#intro)) har en beständig URI som unik identifierare. Objektet ska alltid vara nåbart via internet. 
+ 
+ #### Objekt kan bestå av endast metadata
+ 
+@@ -34,7 +34,7 @@
+ 
+ Den viktigaste faktorn för att utveckla data inom K-samsök är att använda gemensamma termer. Det stärker kontext, gör datan rikare och ökar precisionen. 
+ 
+-## 2. Serialiseringsformat
++## 3. Serialiseringsformat
+ 
+ Detta kapitel beskriver hur information uttrycks tekniskt vid utbyte med K-samsök. För att förstå övriga kapitel behöver man känna till att JSON-LD är det primära formatet och att informationsmodellen bygger på Linked Art.
+ 
+@@ -63,23 +63,23 @@
+ 
+ ### `Content-Type` och `profile` vid konsumtion
+ 
+-När K-samsöks LinkedArt API anropas sätts `Content-Type` [i linje med Linked Art](https://linked.art/api/1.0/json-ld/#media-type) till strängen `application/ld+json;profile="https://linked.art/ns/v1/linked-art.json"`.
++När K-samsöks Linked Art-API anropas sätts `Content-Type` [i linje med Linked Art](https://linked.art/api/1.0/json-ld/#media-type) till strängen `application/ld+json;profile="https://linked.art/ns/v1/linked-art.json"`.
+ 
+ ### `Content-Type` och `profile` vid skördning
+ 
+ Eftersom K-samsök introducerar vissa grammatiska specialiseringar vid skördning används en annan `profile` för skördnings-requests. Läs mer om detta i [skördningsspecifikationen](../../api/index.md#specifikation). 
+ 
+-## 4. Kortformer
++## <a id="kortformer"></a>4. Kortformer
+ 
+-För att göra det lättare för datapartners stödjer vi användandet av _shortforms_: ett anpassat/skräddarsytt(??) uttryck (struket: a harvest-time-only) som expanderas till den fullständinga kanoniska/korrekta (??) Linked ART-formen när en post skördas. 
++För att göra det lättare för datapartners stödjer vi användandet av _kortformer_ (shortforms): ett förenklat uttryck som expanderas till den fullständiga kanoniska Linked Art-formen när en post skördas. 
+ 
+-Kortformsattribut(??) har prefixet `_` för att markera dem som RAA transport conveniences(??), inte kanoniska Linked Art-attribut(?).
++Kortformsattribut har prefixet `_` för att markera dem som RAÄ:s transporthjälpmedel, inte kanoniska Linked Art-attribut (undantaget `_label`, som är ett kanoniskt Linked Art-attribut trots prefixet).
+ 
+-Partners kan använda de här attributen i inskickade poster men poster som visas upp(??) av RAÄ kommer alltid att använda den expanderade kanoniska formen. Notera också att om du skapar en endpoint(??) som kommer eller kan användas av andra användare än RAÄ:s K2-sköradare bör du inte använda kortformer eftersom andra inte kommer att kunna expandera dem. 
++Partners kan använda de här attributen i inskickade poster, men poster som publiceras av RAÄ kommer alltid att använda den expanderade kanoniska formen. Notera också att om du skapar en endpoint som kommer eller kan användas av andra konsumenter än RAÄ:s K-samsök 2-skördare bör du inte använda kortformer, eftersom andra inte kommer att kunna expandera dem. 
+ 
+-Kortformer bör inte användas tillsammans med sin expanderade motsvarighet i samma objekt. Om det expanderade värdet redan är tillgängligt kommer kortformsvärdet att ignoreras för det objektet. (Objekt = post här??) Om en kortform inte kan tolkas på ett otvetydigt sätt kommer posten fortfarande att accepteras och (men??) kortformen kommer att utelämnas från den expanderade formen/kommer inte att expanderas(??). 
++Kortformer bör inte användas tillsammans med sin expanderade motsvarighet i samma objekt (nod). Om det expanderade värdet redan är tillgängligt kommer kortformsvärdet att ignoreras för det objektet. Om en kortform inte kan tolkas på ett otvetydigt sätt kommer posten fortfarande att accepteras, men kortformen kommer inte att expanderas och utelämnas ur den expanderade formen. 
+ 
+-Kortformer i strängar som stödjer angivande av språk anväder suffixformen `text @code`. Tolkningen av `@`som en språktagg händer bara om den föregås av ett mellanrum och avslutar en sträng. Till exempel, `"Ben Hur @en"` betyder att texten `Ben Hur` är på engelska; `"Ben Hur@en"` betraktas som enbart text. 
++Kortformer i strängar som stödjer angivande av språk använder suffixformen `text @code`. Tolkningen av `@` som en språktagg sker bara om det föregås av ett mellanslag och avslutar strängen. Till exempel betyder `"Ben Hur @en"` att texten `Ben Hur` är på engelska; `"Ben Hur@en"` betraktas som enbart text. 
+ 
+ Okända språkkoder ignoreras.
+ 
+@@ -93,7 +93,7 @@
+ 
+ I K-samsök skiljer vi när det gäller objekts natur och livscykel mellan två huvudsakliga objektstyper: 
+ 
+-- **Persistent objekt**: ett objekt vars id är en upplösningsbar URI. Utställaren av den givna URI:n ansvarar för att URI:n är stabil, permanent och beständig över tid, samt att en upplösning av URI:n ger ett meningsfullt svar.
++- **Persistent objekt**: ett objekt vars id är en upplösningsbar URI. Utfärdaren av den givna URI:n ansvarar för att URI:n är stabil, permanent och beständig över tid, samt att en upplösning av URI:n ger ett meningsfullt svar.
+ 
+ __Exempel:__ fysiska eller digitala objekt/föremål, händelser och aktiviteter, motiv och texter, platser, samlingar, abstrakta företeelser, personer och grupper, begrepp
+ 
+@@ -103,10 +103,10 @@
+ 
+ #### Undertyper till persistenta objekt
+ 
+-De persistenta objekten i sin tur indelas inom K-samsök i två underttyper:
++De persistenta objekten i sin tur indelas inom K-samsök i två undertyper:
+ 
+ - **Kulturarvsdata-objekt**: Objekt med persistenta URI:er vars domän är `kulturarvsdata.se`. Se [Identitet för Kulturarvsdata-objekt](#kad) nedan. 
+-- **Andra persistenta objekt'**: Objekt med persistenta URI:er som ligger utanför kulturarvsdata-domänen. Se [Identitet för andra persistenta objekt](#ext) nedan. 
++- **Andra persistenta objekt**: Objekt med persistenta URI:er som ligger utanför kulturarvsdata-domänen. Se [Identitet för andra persistenta objekt](#ext) nedan. 
+ 
+ ### <a id="kad"></a>Identitet för Kulturarvsdata-objekt
+ 
+@@ -122,9 +122,9 @@
+ 
+ Givet en datapartner med id `exem` och ett dataset med id `pel` och en resurs med id `abc` blir kulturarvsdata-URI:n således `https://kulturarvsdata.se/exem/pel/abc`
+ 
+-Datapartnern skapar kulturarvsdata-URI:erna enligt ovanstående mönster när ett dataset förbereds för skördning. URI:erna finns alltså med i datasetet när det skördas. Datapartnern använder konsekvent det datapartner-id och dataset-id som tilldelats av RAÄ (dessa finns att tillgå i K-samsök 2's administrativa gränssnitt). 
++Datapartnern skapar kulturarvsdata-URI:erna enligt ovanstående mönster när ett dataset förbereds för skördning. URI:erna finns alltså med i datasetet när det skördas. Datapartnern använder konsekvent det datapartner-id och dataset-id som tilldelats av RAÄ (dessa finns att tillgå i K-samsök 2:s administrativa gränssnitt). 
+ 
+-Notera: vi rekommenderar starkt att använda endast så kallade "URI-safe" bokstäver (`^[a-zA-Z0-9_-]*$`) i resursens id-segment, det vill säga att id:t är begränsat till a-z, siffror, understreck och bindestreck.   
++Notera: vi rekommenderar starkt att använda endast så kallade "URI-safe" bokstäver (`^[a-zA-Z0-9_-]*$`) i resursens id-segment, det vill säga att id:t är begränsat till a–z, A–Z, siffror, understreck och bindestreck.   
+ 
+ ### <a id="ext"></a>Identitet för andra persistenta objekt
+ 
+@@ -132,14 +132,12 @@
+ 
+ ### <a id="nonpersistent"></a>Identitet för icke-persistenta objekt
+ 
+-Eftersom K-samsök 2 tolkar alla objekt vars id:n är `http`- eller `https`-URI:er som persistenta, indikeras ett objekt som icke-persistent genom att helt utelämna id-fältet på objektet, eller genom att ange en godtycklig sträng som inte börjar med `http`- eller `https` som dess värde.
++Eftersom K-samsök 2 tolkar alla objekt vars id:n är `http`- eller `https`-URI:er som persistenta, indikeras ett objekt som icke-persistent genom att helt utelämna id-fältet på objektet, eller genom att ange en godtycklig sträng som inte börjar med `http`- eller `https` som dess värde. Rekommendationen är att utelämna `id` helt. Om ett id ändå behövs (t.ex. för att kunna referera till samma nod flera gånger inom en post) bör det anges som en blank node-identifierare med prefixet `_:`, eftersom en godtycklig sträng annars riskerar att tolkas som en relativ URI av JSON-LD-processorer.
+ 
+ 
+-Exempel på de identitetsuttryck som beskrivs ovan finns i [Exempelbanken](../exempel/id.md).
++### <a id="ref"></a>Referenser till andra objekt
+ 
+-### Referenser till andra objekt
+-
+-Den av LinkedArt [definierade](https://linked.art/api/1.0/shared/reference/), och av RAÄ föreskrivna, metoden för att referera ("länka") till andra objekt utan att behöva ange det refererade objektets innehåll i sin helhet. Ett objekt kommer tolkas som en referens om det endast innehåller attributen `id` och `type`, samt valfritt även `_label`, `equivalent` och `notation`.
++En *referens* är den av Linked Art [definierade](https://linked.art/api/1.0/shared/reference/), och av RAÄ föreskrivna, metoden för att referera ("länka") till andra objekt utan att behöva ange det refererade objektets innehåll i sin helhet. Ett objekt tolkas som en referens om det endast innehåller attributen `id` och `type`, samt valfritt även `_label`, `equivalent` och `notation`.
+ 
+ Nedan exempel visar hur en referens används för att ange att ett objekt ingår i en samling. 
+ 
+@@ -197,10 +195,10 @@
+ - `id` (URI)
+ - `identified_by`
+ - `type`
+-- `classified_as` *(obs rekomenderad men ej tvingande hos LA/K2 i dagsläget; dock tvingande för Europeana)*
++- `classified_as` *(obs rekommenderad men ej tvingande hos LA/K2 i dagsläget; dock tvingande för Europeana)*
+ - proveniensmetadata: länk till källan, CC0 osv
+ - Publisher/Dataprovider – fylls i automatiskt vid skördning
+-- Description *(obs rekomenderad men ej tvingande hos LA/K2 i dagsläget)*
++- Description *(obs rekommenderad men ej tvingande hos LA/K2 i dagsläget)*
+ - Updated *(hos källan – ur proveniensmetadata)*
+ - Harvested date *(autogenereras vid skördning – ur proveniensmetadata)*
+ - subject_to *(för visual/linguistic items)*
+@@ -227,7 +225,7 @@
+ 
+ #### RecordProvenance: Exempel
+ 
+-Följande exempel visar den minimala formen av den digitala proviniensen (`RecordProvenance`) för ett persistent objekt. Samtliga fält i exemplet är obligatoriska.
++Följande exempel visar den minimala formen av den digitala proveniensen (`RecordProvenance`) för ett persistent objekt. Samtliga fält i exemplet är obligatoriska.
+ 
+ ```
+ {
+@@ -248,7 +246,7 @@
+ }
+ ```
+ 
+-Följande exempel visar en rikare form av digitala proviniens. De två rekommenderade (icke-obligatoriska) fälten `dateCreated` och `dateModified` är angivna. Två icke-obligatoriska fält som RAÄ autogenererar vid skördning — `about` och `provider` —  är också angivna, och korrekt uttryckta som [referenser](Terminologi.md#referens).
++Följande exempel visar en rikare form av digital proveniens. De två rekommenderade (icke-obligatoriska) fälten `dateCreated` och `dateModified` är angivna. Två icke-obligatoriska fält som RAÄ autogenererar vid skördning — `about` och `provider` —  är också angivna, och korrekt uttryckta som [referenser](#ref).
+ 
+ ```
+ {
+@@ -293,7 +291,7 @@
+ 
+ All metadata ska licensieras enligt [CC0 1.0 Universal](http://creativecommons.org/publicdomain/zero/1.0/).
+ 
+-Iom att sådana rättighetsmärkningar handlar om postens innehåll snarare än den kulturarvsresursen den beskriver, ligger den i proveniensstycket, som beskriver just posten mha schema.org:
++I och med att sådana rättighetsmärkningar handlar om postens innehåll snarare än den kulturarvsresurs den beskriver, ligger den i proveniensstycket, som beskriver just posten med hjälp av schema.org:
+ 
+ ```
+ ✂️…️
+@@ -312,9 +310,9 @@
+ 
+ ### Media
+ 
+-All media ska ha en licensmärkning. K-samsök använder  [Creative Commons](https://creativecommons.org/) och [Rights Statements](https://rightsstatements.org/) som godkända licenser enligt [K-samsöks rättighetsmodell](#rättighetsmodell).
++All media ska ha en licensmärkning. K-samsök använder [Creative Commons](https://creativecommons.org/) och [Rights Statements](https://rightsstatements.org/) som godkända licenser enligt [K-samsöks rättighetsmodell](#rättighetsmodell).
+ 
+-Detta förekommer inte på bäraren – den fysiska boken/bilden eller den digitala filen – utan på den abstrakta nivån för själva informationsobjektet, dvs `LinguisticObject` för text, `VisualItem` (motivet) för bilder, osv. Om man t.ex. har en digital bild med licensen CC BY, den beskrivs som bärare för ett motiv, som har rättigheter av typen CC BY:
++Detta förekommer inte på bäraren – den fysiska boken/bilden eller den digitala filen – utan på den abstrakta nivån för själva informationsobjektet, dvs `LinguisticObject` för text, `VisualItem` (motivet) för bilder, osv. Om man t.ex. har en digital bild med licensen CC BY beskrivs den som bärare för ett motiv, som i sin tur är föremål för (`subject_to`) en rättighet av typen CC BY:
+ 
+ ```
+ {
+@@ -419,36 +417,35 @@
+ 
+ URI: [http://creativecommons.org/licenses/by-nc-nd/4.0/](http://creativecommons.org/licenses/by-nc-nd/4.0/)
+ 
+-Vill du använda en äldre version än standard 4.0 så går det bra skriva URL till denna mellan mediaLicenseUrl– och/eller itemLicenseURL, t ex: <mediaLicenseUrl rdf:resource="http://creativecommons.org/licenses/by/3.0"/>
++Vill du använda en äldre version än 4.0 går det bra att ange URI:n till den versionen på samma sätt, t.ex. `http://creativecommons.org/licenses/by/3.0/`.
+ 
+ ##### Förbehållna rättigheter
+ Det finns även en möjlighet att leverera metadata om objekt som är helt skyddade av upphovsrätten, med hjälp av RightsStatements.org-licenser. Dessa märks på följande sätt:
+ 
+ __In Copyright (InC)__
+ 
+-Objektet är upprovsrättsskyddat.
++Objektet är upphovsrättsskyddat.
+ 
+ URI: [http://rightsstatements.org/vocab/InC/1.0/](http://rightsstatements.org/vocab/InC/1.0/)
+ 
+-__In Copyright – EU Orphan Work (InC-EU-OW)__
++__In Copyright – EU Orphan Work (InC-OW-EU)__
+ 
+-Herrelöst verk: objektet är upprovsrättsskyddat, men upphovspersonen är okänd. Obs att för att tillämpa den här licensen ska objektet ha registrerats hos EUIPOs Orphan Works Database genom Patent- och registreringsverket; besök PRVs hemsida för mer information.
++Herrelöst verk: objektet är upphovsrättsskyddat, men upphovspersonen är okänd. Obs att för att tillämpa den här licensen ska objektet ha registrerats hos EUIPOs Orphan Works Database genom Patent- och registreringsverket; besök PRVs hemsida för mer information.
+ 
+ URI: [http://rightsstatements.org/vocab/InC-OW-EU/1.0/](http://rightsstatements.org/vocab/InC-OW-EU/1.0/)
+ 
+ __In Copyright – Educational Use Permitted (InC-EDU)__
+ 
+-Objektet är upprovsrättsskyddat, men licensen tillåter bruk inom utbildningssammanhang.
++Objektet är upphovsrättsskyddat, men licensen tillåter bruk inom utbildningssammanhang.
+ 
+ URI: [http://rightsstatements.org/vocab/InC-EDU/1.0/](http://rightsstatements.org/vocab/InC-EDU/1.0/)
+ 
+-'''
+ 
+ ## 9. Vanligt förekommande mönster i mappningen
+ 
+-Några vanligt förekommande mönster är att kulturarvsresurser har namn eller id-nummer de refereras till med, att verk har titlar, och beskrivande texter. Dessa förekommer som värden på attributet `identified_by`. Det är i många fall ett krav att något värde för `identified_by` ska förekomma – antingen ett namn eller en identifierare.
++Några vanligt förekommande mönster är att kulturarvsresurser har namn eller id-nummer de refereras till med, att verk har titlar, och beskrivande texter. Namn, titlar och identifierare förekommer som värden på attributet `identified_by`; beskrivande texter uttrycks som egna textobjekt (se [Beskrivningar](#beskrivningar) nedan). Det är i många fall ett krav att något värde för `identified_by` ska förekomma – antingen ett namn eller en identifierare.
+ 
+-### Namn
++### <a id="namn"></a>Namn
+ 
+ Kulturarvsresurser – och andra företeelser! – kan identifieras av namn eller titlar. De har `"type": "Name"`, och något passande `classified_as`, oftast `aat:300404670` för det primära namnet eller titeln på ett verk. Övriga vanliga klassifikationer är:
+ 
+@@ -467,22 +464,22 @@
+ 
+ Namn ska ha ett tillhörande `language`-attribut som anger språket.
+ 
+-Se även [kortformer](kortformer.md), där primära namn / preferred terms kan även uttryckas på detta vis.
++Se även [kortformer](#kortformer), där primära namn / preferred terms även kan uttryckas.
+ 
+ ### Identifierare
+ 
+ Identifierare funkar på samma sätt som namn, fast primärt icke-lexikala sådana, som t.ex. ett accessionsnummer eller lämningsnummer. De har `"type": "Identifier"`, och något passande `classified_as`. Vanliga klassifikationer är:
+ 
+-- `aat:300312355` – accesionsnummer
++- `aat:300312355` – accessionsnummer
+ - `aat:300435704` – systemnummer; ett autogenererat nummer från t.ex. ett samlingsförvaltningssystem
+ - `aat:300404621` – lokalt nummer; ett nummer tilldelat av institutionen som är varken accessionsnummer eller systemnummer
+-- `aat:300311706` – lokalsigum; en indentifierare för var ett objekt är fysiskt placerad i samlingen
++- `aat:300311706` – hyllsignum (call number); en identifierare för var ett objekt är fysiskt placerat i samlingen
+ 
+-### Beskrivningar
++### <a id="beskrivningar"></a>Beskrivningar
+ 
+ #### `_label`
+ 
+-`_label` (`rdfs:label`) är i flera fall ett krav och annars ett starkt rekommenderat attribut på många noder. Syftet med `_label` är att ge en utvecklare som jobbar med datat ett tecken på vad den aktuella noden handlar om, ofta i fall där nägot annat namnliknande attribut saknas. Värdet på `_label` ska dock *inte* visas eller synas för slutanvändare på en applikation, webbsida, eller dylikt – den är enbart till för de som granskar datat, som vägledning, inte som innehåll att prestenteras.
++`_label` (`rdfs:label`) är i flera fall ett krav och annars ett starkt rekommenderat attribut på många noder. Syftet med `_label` är att ge en utvecklare som jobbar med datat ett tecken på vad den aktuella noden handlar om, ofta i fall där något annat namnliknande attribut saknas. Värdet på `_label` ska dock *inte* visas eller synas för slutanvändare på en applikation, webbsida, eller dylikt – den är enbart till för de som granskar datat, som vägledning, inte som innehåll att presenteras.
+ 
+ #### Fritext beskrivning
+ 
+@@ -587,9 +584,9 @@
+ 
+ #### Klassificera objekt med hjälp av kontrollerade vokabulär
+ 
+-Att ange `classified_as` som pekar till ett begrepp eller en term mha dess URI är i normalfallet inte ett krav hos K-samsök. Men det är starkt, *starkt* rekommenderat! Datamängder som saknar typer begränsar datats värde, och kommer att få väldigt låga kvalitetsbetyg av just denna anledning. Att ange `language` för textfält är dock ett krav.
++Att ange `classified_as` som pekar till ett begrepp eller en term mha dess URI är i normalfallet inte ett krav hos K-samsök. Men det är starkt, *starkt* rekommenderat! Datamängder som saknar klassificeringar begränsar datats värde, och kommer att få väldigt låga kvalitetsbetyg av just denna anledning. Att ange `language` för textfält är dock ett krav.
+ 
+-`classified_as` och `language` med värden som är URI:er ska alltid formuleras som [referenser](referenser.md).
++`classified_as` och `language` med värden som är URI:er ska alltid formuleras som [referenser](#ref).
+ 
+ T.ex. om man vill beskriva ett kamfodral med hjälp av termen hos Getty AAT – [aat:300423476](http://vocab.getty.edu/aat/300423476) "comb cases" (kamfodral):
+ 
+@@ -610,9 +607,9 @@
+ }
+ ```
+ 
+-Vi rekommenderar i första hand att man använder begrepp som finns med i de rekommenderade vokabulärerna hos Network of Terms. Ifall det specifika begreppet man vill använda saknas, ange istället det närmsta *överordnande* begreppet inom en lämplig hierarki, tillsammans med ett "in-line" singleton instans av begreppet.
++Vi rekommenderar i första hand att man använder begrepp som finns med i de rekommenderade vokabulärerna hos Network of Terms. Ifall det specifika begreppet man vill använda saknas, ange istället det närmaste *överordnade* begreppet inom en lämplig hierarki, tillsammans med en "in-line" singleton-instans av begreppet.
+ 
+-T.ex. om man skulle vilja ange att ett föremål i landskapet är av typen "gärdsgård", begreppet "gärdsgård" finns inte hos Getty AAT eller Network of Terms övriga vokabulärer. Då skulle man istället ange det närmsta överordnande begreppet hos AAT – [aat:300005044](http://vocab.getty.edu/aat/300005044) "fences" (staket) – tillsammans med ett engångsbegrepp för "gärdsgård":
++T.ex. om man skulle vilja ange att ett föremål i landskapet är av typen "gärdsgård", begreppet "gärdsgård" finns inte hos Getty AAT eller Network of Terms övriga vokabulärer. Då skulle man istället ange det närmaste överordnade begreppet hos AAT – [aat:300005044](http://vocab.getty.edu/aat/300005044) "fences" (staket) – tillsammans med ett engångsbegrepp för "gärdsgård":
+ 
+ 
+ ```
+@@ -663,9 +660,9 @@
+ }
+ ```
+ 
+-Har man även en länk till en vokabulärterm som inte förekommer inom Network of Terms är man välkommen att även leverera den tillsammans med – men aldrig istället för – den matchande eller överordnande termen.
++Har man även en länk till en vokabulärterm som inte förekommer inom Network of Terms är man välkommen att även leverera den tillsammans med – men aldrig istället för – den matchande eller överordnade termen.
+ 
+-Om man t.ex. publicerar ett eget begrepp för "gärdsgård" skulle man kunna göra som i exmplet ovanför, fast även inkludera URI:n till detta begrepp:
++Om man t.ex. publicerar ett eget begrepp för "gärdsgård" skulle man kunna göra som i exemplet ovanför, fast även inkludera URI:n till detta begrepp:
+ 
+ ```
+ {
+@@ -716,7 +713,7 @@
+ }
+ ```
+ 
+-I vissa fall kommer det inte att finnas någon lämplig term att mappa mot. I sådana fall kan man leverera ett singleton begrepp, in-line och utan någon koppling till ett begrepp med URI, som tillfällig nödlösning. Detta bör dock anses vara ett undantag snarare än regel.
++I vissa fall kommer det inte att finnas någon lämplig term att mappa mot. I sådana fall kan man leverera ett singleton-begrepp, in-line och utan någon koppling till ett begrepp med URI, som tillfällig nödlösning. Detta bör dock anses vara ett undantag snarare än regel.
+ 
+ #### Klassificering av visuellt innehåll
+ 
+@@ -757,23 +754,23 @@
+ 
+ I avsnittet klassificeringar beskrivs de mönster som gäller för att klassificera information. Det ger en viktig grund för att förstå informationsmodellen, men genom att tillämpa klassificeringsmönstren med gemensamma termer / vokabulär möjliggörs en mycket hög grad av interoperabilitet mellan olika datamängder. 
+ 
+-K-samsöks datamodell är uppbyggd kring användning av gemensamma vokabulär. I den bästa av världar ska varje term definieras med hjälp av en URI för termen. Det är ett av de grundläggande kännetecknen för LinkedArt och det som gör modellen användbar för aggregering så att kulturarvsdatan i K-samsök blir interoperabel och jämförbar med kulturarvsdata från andra datapartners samt från andra kulturarvsinstitutioner.
++K-samsöks datamodell är uppbyggd kring användning av gemensamma vokabulär. I den bästa av världar ska varje term definieras med hjälp av en URI för termen. Det är ett av de grundläggande kännetecknen för Linked Art och det som gör modellen användbar för aggregering så att kulturarvsdatan i K-samsök blir interoperabel och jämförbar med kulturarvsdata från andra datapartners samt från andra kulturarvsinstitutioner.
+ 
+-Användning av vokabulärer är för tillfället inte är ett krav, men att mappa sin data mot vokabulär är den enskilt högst prioriterade insatsen för att höja datakvaliteten i K-samsök. 
++Användning av vokabulärer är för tillfället inte ett krav, men att mappa sin data mot vokabulär är den enskilt högst prioriterade insatsen för att höja datakvaliteten i K-samsök. 
+ 
+ ### K-samsöks krav på vokabulärer
+ 
+-Hos både K-samsök och Linked Art är det som sagt sällan ett krav att ange `classified_as`, men dess fråvaro sänker datans kvalité rejält. Det finns dock vissa krav på *vilka* typer man ska använda för särskilda vanligt förekommande begrepp. T.ex. att det primära namnet för ett objekt skall allltid vara `classified_as` [aat:300404670](http://vocab.getty.edu/aat/300404670). Dessa krav dokumenteras hos Linked Art på [Required Terms](https://linked.art/model/vocab/required/).
++Hos både K-samsök och Linked Art är det som sagt sällan ett krav att ange `classified_as`, men dess frånvaro sänker datans kvalité rejält. Det finns dock vissa krav på *vilka* typer man ska använda för särskilda vanligt förekommande begrepp. T.ex. att det primära namnet för ett objekt skall alltid vara `classified_as` [aat:300404670](http://vocab.getty.edu/aat/300404670). Dessa krav dokumenteras hos Linked Art på [Required Terms](https://linked.art/model/vocab/required/).
+ 
+ Linked Art definierar även motsvarande [Recommended Terms](https://linked.art/model/vocab/recommended/) och [Optional Terms](https://linked.art/model/vocab/optional/) som på samma vis anger vilka termer man borde använda till `classified_as` för olika informationstyper.
+ 
+-Se även: [Namn](namn.md)
++Se även: [Namn](#namn)
+ 
+ ### Rekommenderade vokabulärer i K-samsök
+ 
+-En punkt där K-samsök skiljer sig från Linked Art är plattformens krav på vilka vokabulärer som ska användas. Linked Art förhåller sig mer eller mindre exklusivt till [Getty AAT](https://vocab.getty.edu/aat/). Hos K-samsök föredrar vi även primärt Getty AAT för att så mycket som möjligt behålla kompatibilitet med övriga Linked Art-tillämpningar; men scope:et för K-samsök sträcker sig mycket bredare än Linked Arts fokus på konst, och många viktiga begrepp för kulturarvet i stort och specifika ämnen såsom arkeologi m.fl. saknas. Därför tillåter K-samsök begrepp från övriga rekommenderade vokabulärer, där Getty AAT inte är lämplig. Dessa rekommenderade vokabulärerena och begrepp kureras och sammanställs i tjänsten Network of Terms. Den innehåller för närvarande:
++En punkt där K-samsök skiljer sig från Linked Art är plattformens krav på vilka vokabulärer som ska användas. Linked Art använder i första hand [Getty AAT](https://vocab.getty.edu/aat/). Hos K-samsök föredrar vi även primärt Getty AAT för att så mycket som möjligt behålla kompatibilitet med övriga Linked Art-tillämpningar; men scope:et för K-samsök sträcker sig mycket bredare än Linked Arts fokus på konst, och många viktiga begrepp för kulturarvet i stort och specifika ämnen såsom arkeologi m.fl. saknas. Därför tillåter K-samsök begrepp från övriga rekommenderade vokabulärer, där Getty AAT inte är lämplig. Dessa rekommenderade vokabulärer och begrepp kureras och sammanställs i tjänsten Network of Terms. Den innehåller för närvarande:
+ 
+-- Rättighetsmärkningar ur [K-samsöks rättighetsmodell](../krav_gen/RightsStatement.md#rättighetsmodell):
++- Rättighetsmärkningar ur [K-samsöks rättighetsmodell](#rättighetsmodell):
+ 	- [PD Mark](http://creativecommons.org/publicdomain/mark/1.0/)
+ 	- [CC0](http://creativecommons.org/publicdomain/zero/1.0/)
+ 	- [CC BY](http://creativecommons.org/licenses/by/4.0/)
+@@ -823,7 +820,7 @@
+ 
+ ## 12. Beskrivning av dataset
+ 
+-K-samsök levererar metadata till bl a det gemensamma europeiska dataområdet för kulturarv (Europeana), [Sveriges dataportal](https://www.dataportal.se/) och [European data](https://data.europa.eu/). För att datamängderena som levereras ska vara hittbara för användare krävs information om deras innehåll och proviniens. Beskrivningen är baserad på DCAT-AP SE (och Europeana datasheets ?).
++K-samsök levererar metadata till bl a det gemensamma europeiska dataområdet för kulturarv (Europeana), [Sveriges dataportal](https://www.dataportal.se/) och [European data](https://data.europa.eu/). För att datamängderna som levereras ska vara hittbara för användare krävs information om deras innehåll och proveniens. Beskrivningen är baserad på DCAT-AP SE (och Europeana datasheets ?).
+ 
+ ### Obligatoriska attribut
+ @@@ Preliminär lista, behöver dubbelkollas och anpasses till LA-termer
