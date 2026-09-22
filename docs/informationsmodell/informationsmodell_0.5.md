@@ -163,7 +163,7 @@ K-samsök har ett antal obligatoriska attribut för objekt för enhetlig hanteri
 
 ### Obligatoriska attribut för objekt
 
-@@@ TODO Agnieszka. Obs, listan fortfarande preliminär. Behöver även kollas termmässigt mot LA. På engelska eller svenska? 
+@@@TODO Obs, listan fortfarande preliminär. Behöver även kollas termmässigt mot LA. På engelska eller svenska? 
 
 - Title
 - URI 
@@ -564,9 +564,9 @@ I följande exempel beskrivs ett föremål som har både ett namn och en identif
 
 ## 10. Klassificering
 
-Att klassificera objekt med hjälp av kontrollerade vokabulär och auktoriteter är ett huvudsyfte med all mappning till K-samsök. Det görs för att underlätta interoperabilitet, ökad tydlighet samt identifiera relationer mellan olika objekt. 
+Att klassificera objekt med hjälp av hänvisningar till URI:er är ett huvudsyfte med all mappning av data för export till K-samsök. Det görs för att underlätta interoperabilitet, ökad tydlighet samt identifiera relationer mellan olika objekt. 
 
-Fördelarna med att arbeta med K-samsöks modell för klassificering är flera inom både forskning, intern användning av samlingarna samt underlättar för den som är intresserad av samlingarna. 
+Fördelarna med att arbeta med klassificering via URI:er är flera inom både forskning, intern användning av samlingarna samt underlättar för den som är intresserad av samlingarna. 
 
 I [Nationell strategi för digitalt kulturarv](https://urn.kb.se/resolve?urn=urn:nbn:se:raa:diva-8498) beskrivs detta inom utvecklingsområdet Användbarhet. 
 
@@ -754,14 +754,14 @@ Använd:
 ## 11. Rekommenderade vokabulär
 
 ### Introduktion
-@@@ TODO intro 
 
-K-samsöks datamodell använder vokabulärer genomgående. I den bästa av världar ska varje term definieras med hjälp av en URI för termen. Det är ett av de grundläggande kännetecknen för LinkedArt och det som gör modellen användbar för aggregering så att kulturarvsdatan i K-samsök blir interoperable och jämförbar med kulturarvsdata från andra datapartners samt från andra kulturarvsinstitutioner.
+I avsnittet klassificeringar beskrivs de mönster som gäller för att klassificera information. Det ger en viktig grund för att förstå informationsmodellen, men genom att tillämpa klassificeringsmönstren med gemensamma termer / vokabulär möjliggörs en mycket hög grad av interoperabilitet mellan olika datamängder. 
 
-Även om användning av vokabulärer för tillfället inte är ett krav är det en stark rekommendation som tjänar till att höja kvaliteten på metadatan. 
+K-samsöks datamodell är uppbyggd kring användning av gemensamma vokabulär. I den bästa av världar ska varje term definieras med hjälp av en URI för termen. Det är ett av de grundläggande kännetecknen för LinkedArt och det som gör modellen användbar för aggregering så att kulturarvsdatan i K-samsök blir interoperabel och jämförbar med kulturarvsdata från andra datapartners samt från andra kulturarvsinstitutioner.
 
+Användning av vokabulärer är för tillfället inte är ett krav, men att mappa sin data mot vokabulär är den enskilt högst prioriterade insatsen för att höja datakvaliteten i K-samsök. 
 
-### Linked Arts krav på vokabulärer
+### K-samsöks krav på vokabulärer
 
 Hos både K-samsök och Linked Art är det som sagt sällan ett krav att ange `classified_as`, men dess fråvaro sänker datans kvalité rejält. Det finns dock vissa krav på *vilka* typer man ska använda för särskilda vanligt förekommande begrepp. T.ex. att det primära namnet för ett objekt skall allltid vara `classified_as` [aat:300404670](http://vocab.getty.edu/aat/300404670). Dessa krav dokumenteras hos Linked Art på [Required Terms](https://linked.art/model/vocab/required/).
 
