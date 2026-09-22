@@ -566,7 +566,7 @@ I följande exempel beskrivs ett föremål som har både ett namn och en identif
 
 Att klassificera objekt med hjälp av kontrollerade vokabulär och auktoriteter är ett huvudsyfte med all mappning till K-samsök. Det görs för att underlätta interoperabilitet, ökad tydlighet samt identifiera relationer mellan olika objekt. 
 
-Fördelarna med att arbeta med K-samsöks modell för klassificering är flera inom både forskning, intern använding av samlingarna samt underlättar för den som är intresserad av samlingarna. 
+Fördelarna med att arbeta med K-samsöks modell för klassificering är flera inom både forskning, intern användning av samlingarna samt underlättar för den som är intresserad av samlingarna. 
 
 I [Nationell strategi för digitalt kulturarv](https://urn.kb.se/resolve?urn=urn:nbn:se:raa:diva-8498) beskrivs detta inom utvecklingsområdet Användbarhet. 
 
